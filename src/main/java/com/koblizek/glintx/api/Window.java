@@ -1,8 +1,12 @@
 package com.koblizek.glintx.api;
 
+import com.koblizek.glintx.api.input.Key;
+import com.koblizek.glintx.api.input.KeyState;
+import com.koblizek.glintx.util.InvokableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.Callbacks.*;
@@ -13,9 +17,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
     private final long handle;
-    private Consumer<Integer> keyPressEvent;
-    private Consumer<Integer> keyReleaseEvent;
     private static final Logger LOGGER = LogManager.getLogger();
+
+    private static final InvokableList<Key> keyPressEventList = new InvokableList<>();
 
     public Window(long handle) {
         if (handle == NULL)
@@ -31,18 +35,15 @@ public class Window {
     public void setTitle(String title) {
         glfwSetWindowTitle(handle, title);
     }
-    public void handleKeyPressEvent(Consumer<Integer> keyEvent) {
-        keyPressEvent = keyEvent;
+
+    public void addKeyPressEvent(Consumer<Key> consumer) {
+        keyPressEventList.add(consumer);
     }
-    public void handleKeyReleaseEvent(Consumer<Integer> keyEvent) {
-        keyReleaseEvent = keyEvent;
-    }
+
     public void setKeyCallbacks() {
         glfwSetKeyCallback(handle, (window, key, scancode, action, mods) -> {
-            if (keyPressEvent != null && action == GLFW_PRESS) {
-                keyPressEvent.accept(key);
-            } else if (keyReleaseEvent != null && action == GLFW_RELEASE) {
-                keyReleaseEvent.accept(key);
+            if (action == KeyState.PRESS.getLwjgl3Value()) {
+                keyPressEventList.invokeAll(Key.getKeyById(key));
             }
         });
     }

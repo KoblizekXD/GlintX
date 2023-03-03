@@ -1,6 +1,9 @@
 package com.koblizek.glintx.api.input;
 
+import java.util.Arrays;
+
 public enum Key {
+
     KEY_SPACE(32),
     KEY_APOSTROPHE(39),
     KEY_COMMA(44),
@@ -121,6 +124,7 @@ public enum Key {
     KEY_RIGHT_ALT(346),
     KEY_RIGHT_SUPER(347),
     KEY_MENU(348),
+    UNKNOWN_KEY(-1),
     KEY_LAST(KEY_MENU.getLwjgl3Value());
 
     private final int lwjgl3_value;
@@ -131,5 +135,8 @@ public enum Key {
 
     public int getLwjgl3Value() {
         return lwjgl3_value;
+    }
+    public static Key getKeyById(int id) {
+        return Arrays.stream(Key.values()).filter(key -> key.lwjgl3_value == id).findFirst().orElse(Key.UNKNOWN_KEY);
     }
 }

@@ -1,23 +1,23 @@
 package com.koblizek.glintx.main;
 
-import com.koblizek.glintx.api.Input;
 import com.koblizek.glintx.api.Window;
 import com.koblizek.glintx.imgui.GuiWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.io.IoBuilder;
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
-import java.nio.*;
+import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GLMain {
     public static final Logger LOGGER = LogManager.getLogger();
@@ -70,8 +70,8 @@ public class GLMain {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });*/
-        window1.handleKeyPressEvent(key -> {
-            LOGGER.info("Key: {}", key);
+        window1.addKeyPressEvent(key -> {
+            LOGGER.info("Key: {} has been pressed!", key);
         });
         window1.setKeyCallbacks();
 
