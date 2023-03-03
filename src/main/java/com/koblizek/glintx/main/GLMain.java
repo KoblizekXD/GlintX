@@ -1,6 +1,9 @@
 package com.koblizek.glintx.main;
 
 import com.koblizek.glintx.imgui.GuiWrapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.io.IoBuilder;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -15,14 +18,14 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class GLMain {
+    public static final Logger LOGGER = LogManager.getLogger();
 
     // The window handle
     private long window;
-
     private final GuiWrapper gui = new GuiWrapper();
 
     public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+        LOGGER.info("Executing GlintX with LWJGL bindings on version " + Version.getVersion());
 
         init();
         loop();
@@ -32,19 +35,22 @@ public class GLMain {
         glfwDestroyWindow(window);
 
         // Terminate GLFW and free the error callback
+        LOGGER.warn("GLFW termination started");
         gui.stop();
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+        LOGGER.error("Process ended with exit code 0");
     }
 
     private void init() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
-        GLFWErrorCallback.createPrint(System.err).set();
+        GLFWErrorCallback.createPrint(IoBuilder.forLogger().buildPrintStream()).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
+        LOGGER.info("Initializing GLFW...");
         if ( !glfwInit() )
-            throw new IllegalStateException("Unable to initialize GLFW");
+            LOGGER.fatal("Unable to initialize GLFW");
 
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
@@ -54,7 +60,7 @@ public class GLMain {
         // Create the window
         window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
         if ( window == NULL )
-            throw new RuntimeException("Failed to create the GLFW window");
+            LOGGER.fatal("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -87,6 +93,7 @@ public class GLMain {
         glfwSwapInterval(1);
 
         // Make the window visible
+        LOGGER.warn("Showing window");
         glfwShowWindow(window);
     }
 
@@ -98,7 +105,6 @@ public class GLMain {
         // bindings available for use.
         GL.createCapabilities();
         gui.start(window);
-
         // Set the clear color
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
@@ -108,6 +114,7 @@ public class GLMain {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             gui.render();
+
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
