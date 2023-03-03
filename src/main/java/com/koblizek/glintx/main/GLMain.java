@@ -1,5 +1,6 @@
 package com.koblizek.glintx.main;
 
+import com.koblizek.glintx.imgui.GuiWrapper;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -18,6 +19,8 @@ public class GLMain {
     // The window handle
     private long window;
 
+    private final GuiWrapper gui = new GuiWrapper();
+
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
@@ -29,6 +32,7 @@ public class GLMain {
         glfwDestroyWindow(window);
 
         // Terminate GLFW and free the error callback
+        gui.stop();
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
@@ -93,6 +97,7 @@ public class GLMain {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+        gui.start(window);
 
         // Set the clear color
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
@@ -102,6 +107,7 @@ public class GLMain {
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+            gui.render();
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
