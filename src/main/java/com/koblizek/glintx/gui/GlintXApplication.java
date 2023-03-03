@@ -2,15 +2,8 @@ package com.koblizek.glintx.gui;
 
 import imgui.app.Application;
 import imgui.app.Configuration;
+import org.lwjgl.glfw.GLFW;
 
-public class GlintXApplication extends Application {
-    @Override
-    protected void configure(Configuration config) {
-        config.setTitle("GlintX Engine (unstable release)");
-    }
+public class GlintXApplication {
 
-    @Override
-    public void process() {
-
-    }
 }
