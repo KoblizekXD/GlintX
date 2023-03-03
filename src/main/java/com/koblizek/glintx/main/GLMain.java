@@ -1,5 +1,7 @@
 package com.koblizek.glintx.main;
 
+import com.koblizek.glintx.api.Input;
+import com.koblizek.glintx.api.Window;
 import com.koblizek.glintx.imgui.GuiWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,12 +63,17 @@ public class GLMain {
         window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
         if ( window == NULL )
             LOGGER.fatal("Failed to create the GLFW window");
+        Window window1 = new Window(window);
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+        /*glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+        });*/
+        window1.handleKeyPressEvent(key -> {
+            LOGGER.info("Key: {}", key);
         });
+        window1.setKeyCallbacks();
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
