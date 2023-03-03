@@ -7,10 +7,10 @@ import imgui.glfw.ImGuiImplGlfw;
 public class GuiWrapper {
     private final ImGuiImplGlfw imguiGlfw;
     private final ImGuiImplGl3 imguiGl3;
-
     private long glfwPointer;
 
     public GuiWrapper() {
+        //intializes imgui objects
         imguiGlfw = new ImGuiImplGlfw();
         imguiGl3 = new ImGuiImplGl3();
     }
@@ -19,7 +19,9 @@ public class GuiWrapper {
         //sets current window and setups imgui for rendering onto existing window
         if (glfwPointer == 0)
         glfwPointer = windowContext;
+        //sets the context
         ImGui.createContext();
+        //maps the callbacks to glfw window
         imguiGlfw.init(glfwPointer, true);
         imguiGl3.init();
     }
@@ -32,8 +34,8 @@ public class GuiWrapper {
         imguiGl3.renderDrawData(ImGui.getDrawData());
     }
 
-
     public void stop() {
+        //destroys eversyting
         imguiGl3.dispose();
         imguiGlfw.dispose();
         ImGui.destroyContext();

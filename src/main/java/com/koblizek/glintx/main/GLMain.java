@@ -104,6 +104,7 @@ public class GLMain {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+        //findme :: starts rendering gui
         gui.start(window);
         // Set the clear color
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
@@ -113,6 +114,7 @@ public class GLMain {
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+            //renders gui
             gui.render();
 
             glfwSwapBuffers(window); // swap the color buffers
