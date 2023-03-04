@@ -103,4 +103,7 @@ public class Window {
         glfwSetWindowIcon(handle, imagebf);
         imagebf.free();
     }
+    public void setAttribute(int attribute, int value) {
+        glfwSetWindowAttrib(handle, attribute, value);
+    }
 }
