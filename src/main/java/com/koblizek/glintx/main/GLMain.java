@@ -124,7 +124,7 @@ public class GLMain {
         //findme :: starts rendering gui
         gui.start(window);
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(.5f, .5f, .5f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
