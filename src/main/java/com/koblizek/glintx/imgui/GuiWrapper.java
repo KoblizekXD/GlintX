@@ -13,13 +13,13 @@ public class GuiWrapper {
     private long glfwPointer;
 
     public GuiWrapper() {
-        //intializes imgui objects
+        //initializes ImGui objects
         imguiGlfw = new ImGuiImplGlfw();
         imguiGl3 = new ImGuiImplGl3();
     }
 
     public void start(long windowContext) {
-        //sets current window and setups imgui for rendering onto existing window
+        //sets current window and setups ImGui for rendering onto existing window
         if (glfwPointer == 0)
         glfwPointer = windowContext;
         //sets the context
@@ -41,7 +41,7 @@ public class GuiWrapper {
     }
 
     public void stop() {
-        //destroys eversyting
+        //destroys everything
         LOGGER.warn("Destroying ImGui window");
         imguiGl3.dispose();
         imguiGlfw.dispose();
