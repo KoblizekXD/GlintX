@@ -1,4 +1,4 @@
-package com.koblizek.glintx.api;
+package com.koblizek.glintx.api.display;
 
 import org.lwjgl.glfw.GLFWVidMode;
 

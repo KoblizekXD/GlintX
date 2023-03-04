@@ -1,4 +1,4 @@
-package com.koblizek.glintx.api;
+package com.koblizek.glintx.api.display;
 
 public enum WindowPosition {
     CENTER(2);

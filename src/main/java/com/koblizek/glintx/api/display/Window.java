@@ -1,4 +1,4 @@
-package com.koblizek.glintx.api;
+package com.koblizek.glintx.api.display;
 
 import com.koblizek.glintx.api.input.Key;
 import com.koblizek.glintx.api.input.InputState;
@@ -10,7 +10,6 @@ import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
-import java.nio.file.Path;
 import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.GLFW.*;

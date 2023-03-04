@@ -1,7 +1,7 @@
 package com.koblizek.glintx.main;
 
-import com.koblizek.glintx.api.Window;
-import com.koblizek.glintx.api.WindowPosition;
+import com.koblizek.glintx.api.display.Window;
+import com.koblizek.glintx.api.display.WindowPosition;
 import com.koblizek.glintx.imgui.GuiWrapper;
 import org.apache.logging.log4j.LogManager;
 import com.koblizek.glintx.api.resource.image.GLImage;
@@ -10,12 +10,10 @@ import org.apache.logging.log4j.io.IoBuilder;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.glfw.GLFWImage;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GLMain {
     public static final Logger LOGGER = LogManager.getLogger();
