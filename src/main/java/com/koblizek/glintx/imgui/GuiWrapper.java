@@ -3,10 +3,13 @@ package com.koblizek.glintx.imgui;
 import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GuiWrapper {
     private final ImGuiImplGlfw imguiGlfw;
     private final ImGuiImplGl3 imguiGl3;
+    public static final Logger LOGGER = LogManager.getLogger();
     private long glfwPointer;
 
     public GuiWrapper() {
@@ -24,9 +27,12 @@ public class GuiWrapper {
         //maps the callbacks to glfw window
         imguiGlfw.init(glfwPointer, true);
         imguiGl3.init();
+        LOGGER.info("ImGui successfully initialized!");
     }
 
     public void render() {
+        if (glfwPointer == 0)
+            LOGGER.fatal("GLFW window hasn't been created");
         imguiGlfw.newFrame();
         ImGui.newFrame();
         //rendering done here
@@ -36,6 +42,7 @@ public class GuiWrapper {
 
     public void stop() {
         //destroys eversyting
+        LOGGER.warn("Destroying ImGui window");
         imguiGl3.dispose();
         imguiGlfw.dispose();
         ImGui.destroyContext();
