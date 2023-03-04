@@ -9,28 +9,20 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.io.IoBuilder;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.system.MemoryStack;
-
-import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GLMain {
     public static final Logger LOGGER = LogManager.getLogger();
 
     // The window handle
-    private long window;
+    private long handle;
     private final GuiWrapper gui = new GuiWrapper();
-
-    private final GLImage icon = GLImage.loadImage("src/main/resources/icon.png");
-
 
     public void run() {
         LOGGER.info("Executing GlintX with LWJGL bindings on version " + Version.getVersion());
@@ -39,8 +31,8 @@ public class GLMain {
         loop();
 
         // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
+        glfwFreeCallbacks(handle);
+        glfwDestroyWindow(handle);
 
         // Terminate GLFW and free the error callback
         LOGGER.warn("GLFW termination started");
@@ -60,43 +52,38 @@ public class GLMain {
         if ( !glfwInit() )
             LOGGER.fatal("Unable to initialize GLFW");
 
-        Window window1 = Window.createNewWindow(300, 300, "ano");
-        this.window = window1.getHandle();
-        if ( window == NULL )
-            LOGGER.fatal("Failed to create the GLFW window");
-        window1.addKeyPressEvent(key -> {
+        Window window = Window.createNewWindow(300, 300, "ano");
+        this.handle = window.getHandle();
+        window.addKeyPressEvent(key -> {
             LOGGER.info("Key: {} has been pressed!", key);
         });
-        window1.setKeyCallbacks();
+        window.setKeyCallbacks();
 
         // Get the thread stack and push a new frame
-        window1.setPosition(WindowPosition.CENTER);
+        window.setPosition(WindowPosition.CENTER);
 
-        window1.glfw_context_set();
+        window.glfw_context_set();
         // Enable v-sync
-        window1.toggleVSync(true);
+        window.toggleVSync(true);
 
         //set icon image
-        GLFWImage image = GLFWImage.malloc(); GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
-        image.set(icon.getWidth(), icon.getHeight(), icon.getImage());
-        imagebf.put(0, image);
-        glfwSetWindowIcon(window, imagebf);
+        window.setIcon(GLImage.loadImage("src/main/resources/icon.png"));
         // Make the window visible
         LOGGER.warn("Showing window");
-        glfwShowWindow(window);
+        window.show();
     }
 
     private void loop() {
         GL.createCapabilities();
-        gui.start(window);
+        gui.start(handle);
         glClearColor(.5f, .5f, .5f, 0.0f);
-        while ( !glfwWindowShouldClose(window) ) {
+        while ( !glfwWindowShouldClose(handle) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             //renders gui
             gui.render();
 
-            glfwSwapBuffers(window); // swap the color buffers
+            glfwSwapBuffers(handle); // swap the color buffers
 
             glfwPollEvents();
         }

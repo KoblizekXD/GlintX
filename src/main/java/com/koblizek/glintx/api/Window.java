@@ -2,12 +2,15 @@ package com.koblizek.glintx.api;
 
 import com.koblizek.glintx.api.input.Key;
 import com.koblizek.glintx.api.input.InputState;
+import com.koblizek.glintx.api.resource.image.GLImage;
 import com.koblizek.glintx.util.InvokableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -91,5 +94,13 @@ public class Window {
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 
         return new Window(glfwCreateWindow(width, height, title, NULL, NULL));
+    }
+    public void setIcon(GLImage glImage) {
+        GLFWImage image = GLFWImage.malloc();
+        GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
+        image.set(glImage.getWidth(), glImage.getHeight(), glImage.getImage());
+        imagebf.put(0, image);
+        glfwSetWindowIcon(handle, imagebf);
+        imagebf.free();
     }
 }
