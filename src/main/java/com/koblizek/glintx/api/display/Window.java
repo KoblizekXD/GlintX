@@ -61,8 +61,8 @@ public class Window {
     public void addKeyUpEvent(Consumer<Key> consumer) {
         keyUpEventList.add(consumer);
     }
-    public void addMouseButtonPressEvent(Consumer<Key> consumer) {
-        keyUpEventList.add(consumer);
+    public void addMouseButtonPressEvent(Consumer<Mouse> consumer) {
+        mouseButtonPressEventList.add(consumer);
     }
     public int getWidth() {
         return winWidth;
@@ -73,20 +73,19 @@ public class Window {
 
     public void setKeyCallbacks() {
         glfwSetKeyCallback(handle, (window, key, scancode, action, mods) -> {
-            if (Key.getKeyById(key) != null && Key.getKeyById(key) != Key.UNKNOWN_KEY) {
-                if (action == InputState.PRESS.getLwjgl3Value()) {
-                    keyPressEventList.invokeAll(Key.getKeyById(key));
-                }
-                if (action == InputState.HELD.getLwjgl3Value()) {
-                    keyDownEventList.invokeAll(Key.getKeyById(key));
-                }
-                if (action == InputState.RELEASE.getLwjgl3Value()) {
-                    keyUpEventList.invokeAll(Key.getKeyById(key));
-                }
-            } else {
-                if (action == InputState.PRESS.getLwjgl3Value()) {
-                    mouseButtonPressEventList.invokeAll(Mouse.getKeyById(key));
-                }
+            if (action == InputState.PRESS.getLwjgl3Value()) {
+                keyPressEventList.invokeAll(Key.getKeyById(key));
+            }
+            if (action == InputState.HELD.getLwjgl3Value()) {
+                keyDownEventList.invokeAll(Key.getKeyById(key));
+            }
+            if (action == InputState.RELEASE.getLwjgl3Value()) {
+                keyUpEventList.invokeAll(Key.getKeyById(key));
+            }
+        });
+        glfwSetMouseButtonCallback(handle, (window, key, action, mods) -> {
+            if (action == InputState.PRESS.getLwjgl3Value()) {
+                mouseButtonPressEventList.invokeAll(Mouse.getKeyById(key));
             }
         });
     }

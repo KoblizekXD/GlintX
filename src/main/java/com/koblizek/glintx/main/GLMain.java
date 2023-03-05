@@ -65,6 +65,7 @@ public class GLMain {
                 glTranslatef(0, -5, 0);
             }
         });
+        window.addMouseButtonPressEvent(LOGGER::info);
         window.setKeyCallbacks();
 
         // Get the thread stack and push a new frame
