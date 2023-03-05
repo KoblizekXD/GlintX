@@ -22,6 +22,8 @@ public class Window {
     private IntBuffer height;
 
     private static final InvokableList<Key> keyPressEventList = new InvokableList<>();
+    public static final InvokableList<Key> keyDownEventList = new InvokableList<>();
+    public static final InvokableList<Key> keyUpEventList = new InvokableList<>();
 
     public Window(long handle) {
         if (handle == NULL)
@@ -42,6 +44,12 @@ public class Window {
     public void addKeyPressEvent(Consumer<Key> consumer) {
         keyPressEventList.add(consumer);
     }
+    public void addKeyDownEvent(Consumer<Key> consumer) {
+        keyDownEventList.add(consumer);
+    }
+    public void addKeyUpEvent(Consumer<Key> consumer) {
+        keyUpEventList.add(consumer);
+    }
     public int getWidth() {
         return width.get(0);
     }
@@ -54,6 +62,17 @@ public class Window {
             if (action == InputState.PRESS.getLwjgl3Value()) {
                 keyPressEventList.invokeAll(Key.getKeyById(key));
             }
+            if (action == InputState.HELD.getLwjgl3Value()) {
+                keyDownEventList.invokeAll(Key.getKeyById(key));
+            }
+            if (action == InputState.RELEASE.getLwjgl3Value()) {
+                keyUpEventList.invokeAll(Key.getKeyById(key));
+            }
+        });
+    }
+    public void setMouseCallbacks() {
+        glfwSetMouseButtonCallback(handle, (window, button, action, mods) -> {
+
         });
     }
     public void setPosition(WindowPosition position) {
@@ -90,7 +109,7 @@ public class Window {
 
     public static Window createNewWindow(int width, int height, String title) {
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 
         return new Window(glfwCreateWindow(width, height, title, NULL, NULL));
