@@ -36,23 +36,15 @@ public class GLMain {
         glfwDestroyWindow(handle);
 
         // Terminate GLFW and free the error callback
-        LOGGER.warn("GLFW termination started");
-        gui.stop();
-        glfwTerminate();
+        Window.terminateAPI(gui);
         LOGGER.warn("GLFWErrorCallback#free can produce NullPointerException");
         glfwSetErrorCallback(null).free();
         LOGGER.error("Process ended with exit code 0");
     }
 
     private void init() {
-        // Setup an error callback. The default implementation
-        // will print the error message in System.err.
-        GLFWErrorCallback.createPrint(IoBuilder.forLogger().buildPrintStream()).set();
-
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        LOGGER.info("Initializing GLFW...");
-        if ( !glfwInit() )
-            LOGGER.fatal("Unable to initialize GLFW");
+        Window.initializeWindowAPI();
 
         window = Window.createNewWindow(1024, 704, "ano");
         this.handle = window.getHandle();
@@ -99,10 +91,7 @@ public class GLMain {
         LOGGER.info("Creating capabilities");
         GL.createCapabilities();
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, window.getWidth(), window.getHeight(), 0, 1, -1);
-        glMatrixMode(GL_MODELVIEW);
+        setupCoordinateSystem(window.getWidth(), window.getHeight());
 
         gui.start(handle);
         glClearColor(.5f, .5f, .5f, 0.0f);
@@ -114,9 +103,9 @@ public class GLMain {
 
             Objects.drawQuad(10, 10, 100, 100);
 
-            glfwSwapBuffers(handle); // swap the color buffers
-
             glfwPollEvents();
+
+            glfwSwapBuffers(handle); // swap the color buffers
         }
     }
 }
