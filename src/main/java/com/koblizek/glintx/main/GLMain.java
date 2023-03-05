@@ -32,13 +32,11 @@ public class GLMain {
         loop();
 
         // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(handle);
-        glfwDestroyWindow(handle);
+        window.destroy();
 
         // Terminate GLFW and free the error callback
-        Window.terminateAPI(gui);
         LOGGER.warn("GLFWErrorCallback#free can produce NullPointerException");
-        glfwSetErrorCallback(null).free();
+        Window.terminateAPI(gui);
         LOGGER.error("Process ended with exit code 0");
     }
 
@@ -104,9 +102,9 @@ public class GLMain {
 
             Objects.drawQuad(10, 10, 100, 100);
 
-            glfwPollEvents();
+            Window.invokeEvents();
 
-            glfwSwapBuffers(handle); // swap the color buffers
+            window.switchBufferState();
         }
     }
 }

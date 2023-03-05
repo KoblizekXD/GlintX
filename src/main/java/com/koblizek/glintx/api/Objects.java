@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL20.*;
 public final class Objects {
     private Objects() {}
 
-    public static void drawQuad(float x, float y, float width, float height) {
+    public static void  drawQuad(float x, float y, float width, float height) {
         glBegin(GL_QUADS);
             glVertex2d(x, y);
             glVertex2d(x, (y + height));

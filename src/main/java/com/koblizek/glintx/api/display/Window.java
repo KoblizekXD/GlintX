@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.io.IoBuilder;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
@@ -17,6 +18,7 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.IntBuffer;
 import java.util.function.Consumer;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -134,6 +136,10 @@ public class Window {
     public void setAttribute(int attribute, int value) {
         glfwSetWindowAttrib(handle, attribute, value);
     }
+    public void destroy() {
+        glfwFreeCallbacks(handle);
+        glfwDestroyWindow(handle);
+    }
     public static void initializeWindowAPI() {
         GLFWErrorCallback.createPrint(IoBuilder.forLogger().buildPrintStream()).set();
         LOGGER.info("Initializing window API(GLFW)...");
@@ -144,5 +150,13 @@ public class Window {
         LOGGER.warn("Terminating GLFW");
         wrapper.stop();
         glfwTerminate();
+
+        glfwSetErrorCallback(null).free();
+    }
+    public static void invokeEvents() {
+        glfwPollEvents();
+    }
+    public  void switchBufferState() {
+        glfwSwapBuffers(handle);
     }
 }
