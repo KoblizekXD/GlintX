@@ -32,6 +32,7 @@ public class Window {
         glfwSetWindowSize(handle, width, height);
     }
     public void toggleVSync(boolean option) {
+        LOGGER.warn("Toggling VSync can cause a frame drop");
         glfwSwapInterval((option ? 1 : 0));
     }
     public void setTitle(String title) {

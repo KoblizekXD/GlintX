@@ -2,9 +2,9 @@ package com.koblizek.glintx.main;
 
 import com.koblizek.glintx.api.display.Window;
 import com.koblizek.glintx.api.display.WindowPosition;
+import com.koblizek.glintx.api.resource.image.GLImage;
 import com.koblizek.glintx.imgui.GuiWrapper;
 import org.apache.logging.log4j.LogManager;
-import com.koblizek.glintx.api.resource.image.GLImage;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.io.IoBuilder;
 import org.lwjgl.Version;
@@ -36,6 +36,7 @@ public class GLMain {
         LOGGER.warn("GLFW termination started");
         gui.stop();
         glfwTerminate();
+        LOGGER.warn("GLFWErrorCallback#free can produce NullPointerException");
         glfwSetErrorCallback(null).free();
         LOGGER.error("Process ended with exit code 0");
     }
@@ -67,11 +68,11 @@ public class GLMain {
         //set icon image
         window.setIcon(GLImage.loadImage("src/main/resources/icon.png"));
         // Make the window visible
-        LOGGER.warn("Showing window");
         window.show();
     }
 
     private void loop() {
+        LOGGER.info("Creating capabilities");
         GL.createCapabilities();
         gui.start(handle);
         glClearColor(.5f, .5f, .5f, 0.0f);
@@ -80,6 +81,13 @@ public class GLMain {
 
             //renders gui
             gui.render();
+
+            glBegin(GL_QUADS);
+                glVertex2f(-0.5f, 0.5f);
+                glVertex2f(0.5f, 0.5f);
+                glVertex2f(0.5f, -0.5f);
+                glVertex2f(-0.5f, -0.5f);
+            glEnd();
 
             glfwSwapBuffers(handle); // swap the color buffers
 
