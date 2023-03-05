@@ -1,6 +1,5 @@
 package com.koblizek.glintx.main;
 
-import com.koblizek.glintx.api.Objects;
 import com.koblizek.glintx.api.display.Window;
 import com.koblizek.glintx.api.display.WindowPosition;
 import com.koblizek.glintx.api.resource.image.GLImage;
@@ -52,7 +51,7 @@ public class GLMain {
         if ( !glfwInit() )
             LOGGER.fatal("Unable to initialize GLFW");
 
-        Window window = Window.createNewWindow(1028, 720, "ano");
+        Window window = Window.createNewWindow(300, 300, "ano");
         this.handle = window.getHandle();
         window.addKeyPressEvent(key -> {
             LOGGER.info("Key: {} has been pressed!", key);
@@ -62,7 +61,7 @@ public class GLMain {
         // Get the thread stack and push a new frame
         window.setPosition(WindowPosition.CENTER);
 
-        window.glfw_context_set();
+        window.setContext();
         // Enable v-sync
         window.toggleVSync(true);
 
@@ -83,7 +82,12 @@ public class GLMain {
             //renders gui
             gui.render();
 
-            Objects.drawTriangle();
+            glBegin(GL_QUADS);
+                glVertex2f(-0.5f, 0.5f);
+                glVertex2f(0.5f, 0.5f);
+                glVertex2f(0.5f, -0.5f);
+                glVertex2f(-0.5f, -0.5f);
+            glEnd();
 
             glfwSwapBuffers(handle); // swap the color buffers
 

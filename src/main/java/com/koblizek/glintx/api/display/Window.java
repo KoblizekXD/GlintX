@@ -2,6 +2,7 @@ package com.koblizek.glintx.api.display;
 
 import com.koblizek.glintx.api.input.Key;
 import com.koblizek.glintx.api.input.InputState;
+import com.koblizek.glintx.api.input.Mouse;
 import com.koblizek.glintx.api.resource.image.GLImage;
 import com.koblizek.glintx.util.InvokableList;
 import org.apache.logging.log4j.LogManager;
@@ -96,7 +97,7 @@ public class Window {
     public void show() {
         glfwShowWindow(handle);
     }
-    public void glfw_context_set() {
+    public void setContext() {
         glfwMakeContextCurrent(handle);
     }
     public void setResizable(boolean b) {

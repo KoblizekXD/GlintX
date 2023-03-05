@@ -1,5 +1,7 @@
 package com.koblizek.glintx.api.input;
 
+import java.util.Arrays;
+
 public enum Mouse {
     MOUSE_BUTTON_1(0),
     MOUSE_BUTTON_2(1),
@@ -22,5 +24,8 @@ public enum Mouse {
 
     public int getLwjgl3_int() {
         return lwjgl3_int;
+    }
+    public static Mouse getKeyById(int id) {
+        return Arrays.stream(Mouse.values()).filter(key -> key.lwjgl3_int == id).findFirst().orElse(null);
     }
 }
