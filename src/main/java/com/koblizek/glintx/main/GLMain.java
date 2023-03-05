@@ -1,7 +1,9 @@
 package com.koblizek.glintx.main;
 
+import com.koblizek.glintx.api.Objects;
 import com.koblizek.glintx.api.display.Window;
 import com.koblizek.glintx.api.display.WindowPosition;
+import com.koblizek.glintx.api.input.Key;
 import com.koblizek.glintx.api.resource.image.GLImage;
 import com.koblizek.glintx.imgui.GuiWrapper;
 import org.apache.logging.log4j.LogManager;
@@ -21,6 +23,7 @@ public class GLMain {
     // The window handle
     private long handle;
     private final GuiWrapper gui = new GuiWrapper();
+    private Window window;
 
     public void run() {
         LOGGER.info("Executing GlintX with LWJGL bindings on version " + Version.getVersion());
@@ -51,10 +54,24 @@ public class GLMain {
         if ( !glfwInit() )
             LOGGER.fatal("Unable to initialize GLFW");
 
-        Window window = Window.createNewWindow(300, 300, "ano");
+        window = Window.createNewWindow(1024, 704, "ano");
         this.handle = window.getHandle();
         window.addKeyPressEvent(key -> {
             LOGGER.info("Key: {} has been pressed!", key);
+        });
+        window.addKeyDownEvent(key -> {
+            if (key == Key.KEY_D) {
+                glTranslatef(5, 0, 0);
+            }
+            if (key == Key.KEY_S) {
+                glTranslatef(0, 5, 0);
+            }
+            if (key == Key.KEY_A) {
+                glTranslatef(-5, 0, 0);
+            }
+            if (key == Key.KEY_W) {
+                glTranslatef(0, -5, 0);
+            }
         });
         window.setKeyCallbacks();
 
@@ -71,9 +88,22 @@ public class GLMain {
         window.show();
     }
 
+    private void setupCoordinateSystem(int screenWidth, int screenHeight) {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, screenWidth, screenHeight, 0, 1, -1);
+        glMatrixMode(GL_MODELVIEW);
+    }
+
     private void loop() {
         LOGGER.info("Creating capabilities");
         GL.createCapabilities();
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, window.getWidth(), window.getHeight(), 0, 1, -1);
+        glMatrixMode(GL_MODELVIEW);
+
         gui.start(handle);
         glClearColor(.5f, .5f, .5f, 0.0f);
         while ( !glfwWindowShouldClose(handle) ) {
@@ -82,12 +112,7 @@ public class GLMain {
             //renders gui
             gui.render();
 
-            glBegin(GL_QUADS);
-                glVertex2f(-0.5f, 0.5f);
-                glVertex2f(0.5f, 0.5f);
-                glVertex2f(0.5f, -0.5f);
-                glVertex2f(-0.5f, -0.5f);
-            glEnd();
+            Objects.drawQuad(10, 10, 100, 100);
 
             glfwSwapBuffers(handle); // swap the color buffers
 

@@ -7,6 +7,7 @@ import com.koblizek.glintx.api.resource.image.GLImage;
 import com.koblizek.glintx.util.InvokableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 
@@ -14,6 +15,7 @@ import java.nio.IntBuffer;
 import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
@@ -21,12 +23,16 @@ public class Window {
     private static final Logger LOGGER = LogManager.getLogger();
     private IntBuffer width;
     private IntBuffer height;
+    private int winWidth;
+    private int winHeight;
 
     private static final InvokableList<Key> keyPressEventList = new InvokableList<>();
     public static final InvokableList<Key> keyDownEventList = new InvokableList<>();
     public static final InvokableList<Key> keyUpEventList = new InvokableList<>();
 
-    public Window(long handle) {
+    public Window(long handle, int width, int height) {
+        this.winWidth = width;
+        this.winHeight = height;
         if (handle == NULL)
             LOGGER.error("NULL Exception: handle(long) cannot be null");
         this.handle = handle;
@@ -35,7 +41,7 @@ public class Window {
         glfwSetWindowSize(handle, width, height);
     }
     public void toggleVSync(boolean option) {
-        LOGGER.warn("Toggling VSync can cause a frame drop");
+        LOGGER.warn("!Toggling VSync can cause a frame drop!");
         glfwSwapInterval((option ? 1 : 0));
     }
     public void setTitle(String title) {
@@ -52,10 +58,10 @@ public class Window {
         keyUpEventList.add(consumer);
     }
     public int getWidth() {
-        return width.get(0);
+        return winWidth;
     }
     public int getHeight() {
-        return height.get(0);
+        return winHeight;
     }
 
     public void setKeyCallbacks() {
@@ -86,11 +92,6 @@ public class Window {
                 (Monitor.getMainMonitor().getWindowHeight() - getHeight()) / position.getDivision());
     }
     public void setPosition(int division) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            width = stack.mallocInt(1);
-            height = stack.mallocInt(1);
-        }
-        glfwGetWindowSize(handle, width, height);
         glfwSetWindowPos(handle, (Monitor.getMainMonitor().getWindowWidth() - getWidth()) / division,
                 (Monitor.getMainMonitor().getWindowHeight() - getHeight()) / division);
     }
@@ -113,7 +114,7 @@ public class Window {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 
-        return new Window(glfwCreateWindow(width, height, title, NULL, NULL));
+        return new Window(glfwCreateWindow(width, height, title, NULL, NULL), width, height);
     }
     public void setIcon(GLImage glImage) {
         GLFWImage image = GLFWImage.malloc();

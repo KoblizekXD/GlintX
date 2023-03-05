@@ -1,6 +1,7 @@
 package com.koblizek.glintx.api;
 
 import com.koblizek.glintx.api.shaders.ShaderManager;
+import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -11,14 +12,13 @@ public final class Objects {
 
     public static void drawQuad(float x, float y, float width, float height) {
         glBegin(GL_QUADS);
-            glVertex2d(1/x, 1/y);
-            glVertex2d(1/x, 1/(y + height));
-            glVertex2d(1/(x + width), 1/(y + height));
-            glVertex2d(1/(x + width), 1/y);
+            glVertex2d(x, y);
+            glVertex2d(x, (y + height));
+            glVertex2d((x + width), (y + height));
+            glVertex2d((x + width), y);
         glEnd();
     }
     public static void drawTriangle() {
-        glTranslated();
         float vertices[] = {
                 -0.5f, -0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f,
