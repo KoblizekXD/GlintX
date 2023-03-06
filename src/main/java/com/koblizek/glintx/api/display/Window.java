@@ -4,13 +4,11 @@ import com.koblizek.glintx.api.input.Key;
 import com.koblizek.glintx.api.input.InputState;
 import com.koblizek.glintx.api.input.Mouse;
 import com.koblizek.glintx.api.resource.image.GLImage;
-import com.koblizek.glintx.imgui.GuiWrapper;
+import com.koblizek.glintx.imgui.GLGui;
 import com.koblizek.glintx.util.InvokableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.io.IoBuilder;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
@@ -20,7 +18,6 @@ import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
@@ -146,7 +143,7 @@ public class Window {
         if (!glfwInit())
             LOGGER.error("Error occurred while initializing window API");
     }
-    public static void terminateAPI(GuiWrapper wrapper) {
+    public static void terminateAPI(GLGui wrapper) {
         LOGGER.warn("Terminating GLFW");
         wrapper.stop();
         glfwTerminate();
@@ -156,7 +153,12 @@ public class Window {
     public static void invokeEvents() {
         glfwPollEvents();
     }
-    public  void switchBufferState() {
+    public void switchBufferState() {
         glfwSwapBuffers(handle);
     }
+
+    public boolean shouldCloseWindow() {
+       return glfwWindowShouldClose(handle);
+    }
+
 }

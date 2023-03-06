@@ -6,15 +6,13 @@ import imgui.glfw.ImGuiImplGlfw;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.function.Consumer;
-
-public class GuiWrapper {
+public class GLGui {
     private final ImGuiImplGlfw imguiGlfw;
     private final ImGuiImplGl3 imguiGl3;
     public static final Logger LOGGER = LogManager.getLogger();
     private long glfwPointer;
 
-    public GuiWrapper() {
+    public GLGui() {
         //initializes ImGui objects
         imguiGlfw = new ImGuiImplGlfw();
         imguiGl3 = new ImGuiImplGl3();
