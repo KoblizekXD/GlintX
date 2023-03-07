@@ -3,6 +3,7 @@ package com.koblizek.glintx.main;
 import com.koblizek.glintx.api.display.Window;
 import com.koblizek.glintx.api.display.WindowPosition;
 import com.koblizek.glintx.api.resource.image.GLImage;
+import com.koblizek.glintx.api.shaders.GLShader;
 import com.koblizek.glintx.imgui.GLGui;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,21 +37,9 @@ public class GLMain {
         Window.terminateAPI(gui);
         LOGGER.error("Process ended with exit code 0");
     }
-    private String vertexsrc = "#version 330 core\n" +
-            "layout (location = 0) in vec3 aPos;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" +
-            "}";
-    private String fragsrc = "#version 330 core\n" +
-            "out vec4 FragColor;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" +
-            "}";
 
+
+    private GLShader shader = new GLShader("vertex_shader.vsh","fragment_shader.fsh");
     private void init() {
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         Window.initializeWindowAPI();
@@ -73,19 +62,8 @@ public class GLMain {
         // Make the window visible
         window.show();
         GL.createCapabilities();
-        // vertex shader
-        int vertexshader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexshader, vertexsrc);
-        glCompileShader(vertexshader);
-        //fragment shader
-        int fragshader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragshader, fragsrc);
-        glCompileShader(fragshader);
-        //attach those to a usable shader
-        shaderprogram = glCreateProgram();
-        glAttachShader(shaderprogram, vertexshader);
-        glAttachShader(shaderprogram, fragshader);
-        glLinkProgram(shaderprogram);
+        shader.init();
+
         // delete shaders from memory
         float vertices[] = {
                 0.5f,  0.5f, 0.0f,  // top right
@@ -132,10 +110,10 @@ public class GLMain {
 
             //renders gui
             gui.render();
-            glUseProgram(shaderprogram);
+            shader.bind();
             glBindVertexArray(VAO);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+            shader.unbind();
             Window.invokeEvents();
             window.switchBufferState();
         }
